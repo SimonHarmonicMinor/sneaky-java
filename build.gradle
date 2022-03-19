@@ -7,6 +7,7 @@ plugins {
     id 'checkstyle'
     id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
     id 'pmd'
+    id 'org.shipkit.shipkit-auto-version' version '1.1.20'
 }
 
 tasks.withType(JavaCompile) {
