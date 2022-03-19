@@ -10,6 +10,11 @@ import java.util.function.Consumer;
  */
 public final class Sneaky {
 
+  private Sneaky() {
+    // no op
+  }
+
+
   /**
    * Returns {@linkplain Consumer} that may throw {@linkplain Exception} ignoring {@code throws
    * Exception} in the method signature.
