@@ -13,6 +13,11 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:all" << "-Xlint:-serial" << "-Werror"
 }
 
+dependencies {
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+}
+
 java {
     withJavadocJar()
     withSourcesJar()
@@ -61,6 +66,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 task testsJar(type: Jar) {
