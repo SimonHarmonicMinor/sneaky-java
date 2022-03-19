@@ -7,7 +7,7 @@ plugins {
     id 'checkstyle'
     id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
     id 'pmd'
-    id 'org.shipkit.shipkit-auto-version' version '1.1.20'
+    id 'pl.allegro.tech.build.axion-release' version '1.13.6'
 }
 
 tasks.withType(JavaCompile) {
@@ -24,6 +24,8 @@ java {
 group 'com.kirekov'
 version 'DEV-SNAPSHOT'
 description 'Java utilities to throw checked exceptions in a "sneaky" way'
+
+project.version = scmVersion.version
 
 pmd {
     consoleOutput = true
