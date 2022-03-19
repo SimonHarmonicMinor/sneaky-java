@@ -1,0 +1,38 @@
+language: java
+
+install: true
+
+git:
+  depth: 0
+
+addons:
+  sonarcloud:
+    organization: simonharmonicminor
+    token:
+      secure: "$SONAR_TOKEN"
+
+script:
+  - "./gradlew clean build jacocoTestReport sonarqube"
+
+branches:
+  only:
+    - master
+    - main
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: bash ./deploy.sh
+    on:
+      all_branches: true
+      condition: "$TRAVIS_BRANCH =~ ^(master|main)$"
+
+cache:
+  directories:
+    - "$HOME/.m2/repository"
+    - "$HOME/.sonar/cache"
+    - "$HOME/.gradle"
+    - ".gradle"
+
+before_deploy:
+  - openssl aes-256-cbc -K $encrypted_12c8071d2874_key -iv $encrypted_12c8071d2874_iv -in private_key.gpg.enc -out ./private_key.gpg -d

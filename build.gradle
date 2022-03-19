@@ -1,0 +1,157 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'jacoco'
+    id "org.sonarqube" version "3.3"
+    id 'checkstyle'
+    id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
+    id 'pmd'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:all" << "-Xlint:-serial" << "-Werror"
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+group 'com.kirekov'
+version 'DEV-SNAPSHOT'
+description 'Java utilitities to throw checked exceptions in a "sneaky" way'
+
+pmd {
+    consoleOutput = true
+    toolVersion = "6.31.0"
+    ignoreFailures = false
+    ruleSets = []
+}
+
+pmdMain {
+    ruleSetFiles = files("codestyle/pmd_main.xml")
+}
+
+pmdTest {
+    ruleSetFiles = files("codestyle/pmd_test.xml")
+}
+
+task runStaticAnalysis(dependsOn: [checkstyleMain, checkstyleTest, pmdMain, pmdTest])
+
+checkstyle {
+    configFile = file('codestyle/checkstyle.xml')
+    ignoreFailures = false
+    maxWarnings = 0
+    showViolations = true
+    toolVersion = '8.42'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task testsJar(type: Jar) {
+    archiveClassifier = 'tests'
+    from sourceSets.test.output
+}
+
+publishing {
+    publications {
+        sneakyJava(MavenPublication) {
+            artifact jar {
+                extension 'jar'
+            }
+            artifact javadocJar {
+                classifier 'javadoc'
+                extension 'jar'
+            }
+            artifact sourcesJar {
+                classifier 'sources'
+                extension 'jar'
+            }
+            artifact testsJar {
+                classifier 'tests'
+                extension 'jar'
+            }
+            pom {
+                name = 'Sneaky Java'
+                description = 'Java utilitities to throw checked exceptions in a "sneaky" way'
+                url = 'https://github.com/SimonHarmonicMinor/sneaky-java'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://www.mit.edu/~amini/LICENSE.md'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'kirekov'
+                        name = 'Semyon Kirekov'
+                        email = 'semyon@kirekov.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:https://github.com/SimonHarmonicMinor/sneaky-java.git'
+                    developerConnection = 'scm:git://github.com/SimonHarmonicMinor/sneaky-java.git'
+                    url = 'https://github.com/SimonHarmonicMinor/sneaky-java'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username findProperty('ossSonatypeUsername')
+                password findProperty('ossSonatypePassword')
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.sneakyJava
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = findProperty('ossSonatypeUsername')
+            password = findProperty('ossSonatypePassword')
+        }
+    }
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "SimonHarmonicMinor_sneaky-java"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+    }
+}
