@@ -35,5 +35,5 @@ cache:
     - ".gradle"
 
 before_deploy:
-  - openssl aes-256-cbc -K $encrypted_12c8071d2874_key -iv $encrypted_12c8071d2874_iv -in private_key.gpg.enc -out ./private_key.gpg -d
-  - openssl aes-256-cbc -K $encrypted_12c8071d2874_key -iv $encrypted_12c8071d2874_iv -in gradle.properties.enc -out ./gradle.properties -d
+  - openssl aes-256-cbc -K $encrypted_12c8071d2874_key -iv $encrypted_12c8071d2874_iv -in secrets.tar.enc -out secrets.tar -d
+  - tar xvf secrets.tar
