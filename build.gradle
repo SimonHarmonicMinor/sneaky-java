@@ -22,7 +22,7 @@ java {
 
 group 'com.kirekov'
 version 'DEV-SNAPSHOT'
-description 'Java utilitities to throw checked exceptions in a "sneaky" way'
+description 'Java utilities to throw checked exceptions in a "sneaky" way'
 
 pmd {
     consoleOutput = true
@@ -88,7 +88,7 @@ publishing {
             }
             pom {
                 name = 'Sneaky Java'
-                description = 'Java utilitities to throw checked exceptions in a "sneaky" way'
+                description = 'Java utilities to throw checked exceptions in a "sneaky" way'
                 url = 'https://github.com/SimonHarmonicMinor/sneaky-java'
                 licenses {
                     license {
