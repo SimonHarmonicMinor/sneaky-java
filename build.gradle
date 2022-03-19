@@ -26,7 +26,7 @@ java {
 }
 
 group 'com.kirekov'
-version '0.0.1'
+version '1.0.0'
 description 'Java utilities to throw checked exceptions in a "sneaky" way'
 
 pmd {
