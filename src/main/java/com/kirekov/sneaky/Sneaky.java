@@ -1,6 +1,8 @@
 package com.kirekov.sneaky;
 
+import com.kirekov.sneaky.lambda.CheckedBiConsumer;
 import com.kirekov.sneaky.lambda.CheckedConsumer;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -9,8 +11,8 @@ import java.util.function.Consumer;
 public final class Sneaky {
 
   /**
-   * Returns {@linkplain Consumer} that throws {@linkplain Exception} as {@linkplain
-   * RuntimeException}.
+   * Returns {@linkplain Consumer} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} in the method signature.
    *
    * @param checkedConsumer consumer that throws {@linkplain Exception}
    * @param <T>             the input argument
@@ -27,7 +29,26 @@ public final class Sneaky {
   }
 
   /**
-   * Throws {@linkplain Exception}. Does not require to add {@code throws Exception} to a method
+   * Returns {@linkplain BiConsumer} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} in the method signature.
+   *
+   * @param checkedBiConsumer biConsumer that throws {@linkplain Exception}
+   * @param <T>               the first input argument
+   * @param <U>               the second input argument
+   * @return wrapped biConsumer
+   */
+  public static <T, U> BiConsumer<T, U> biConsumer(CheckedBiConsumer<T, U> checkedBiConsumer) {
+    return (t, u) -> {
+      try {
+        checkedBiConsumer.accept(t, u);
+      } catch (Exception e) {
+        throwUnchecked(e);
+      }
+    };
+  }
+
+  /**
+   * Throws {@linkplain Exception}. Does not require adding {@code throws Exception} to a method
    * signature.
    *
    * @param exception exception to throw
