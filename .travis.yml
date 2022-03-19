@@ -9,7 +9,7 @@ addons:
   sonarcloud:
     organization: simonharmonicminor
     token:
-      secure: "mEaxokz1yHr19VRyErxJJrx/vta3xjy+7S+04iHM3kJ5SWmfg0rmmQE3JqgnBtRiduQY6ZefiX74iyzage9hvneAkn4bpKRuaAEGaXpY9CTvNJ9nwQvSSOT913CM3EE7/sCp0/uFv29uqsrYDeC3LR6qIsDIXh4wAg2IrOmJocJYmy/sCRNvmHIlI82rqajIQB1V3vX6plJNQqfOf3QwWz3m/soPhWrzhprGC8mOfjtfecV/Z/W77VLlZFj8+f9FY+P3VpOqxZLNrtW0rv927+xWaWQZSC78sAHL5Y0saxqxu8wQIMoYrd//l7D3flp9//fdK2EjgDc8OFhdtSZAMDuECgHubgh3npLmtBVQ9GWyn4genxyjKc+5wg2ui9N1ZfulLx3ZWZ2YeCMo9NTpwL8mLOpDEagFhtk97jhjixTPfnm/WhcFb418SEt5xWWfNXLMHZisLUopyqbUz17wtR0bWEXAq+rYrlyMGioso1ibQYIun5EplKKNGB5NfZGhssiumUlbrffZx0bi5ObPjtmYqBbtdujqYFYSTY3/RfUxFNL8TVikOv8NoP9gdTUuH0NiIDESbPGiXipwPXYIHisALVe1TzxHwkB9ASNEgUCuj6iydjRY9PSPCWBE35xf2l6pc5IoLadQhbntXd9lQ1ZXRPyJbOh+ODd0Ja5s1OI="
+      secure: mEaxokz1yHr19VRyErxJJrx/vta3xjy+7S+04iHM3kJ5SWmfg0rmmQE3JqgnBtRiduQY6ZefiX74iyzage9hvneAkn4bpKRuaAEGaXpY9CTvNJ9nwQvSSOT913CM3EE7/sCp0/uFv29uqsrYDeC3LR6qIsDIXh4wAg2IrOmJocJYmy/sCRNvmHIlI82rqajIQB1V3vX6plJNQqfOf3QwWz3m/soPhWrzhprGC8mOfjtfecV/Z/W77VLlZFj8+f9FY+P3VpOqxZLNrtW0rv927+xWaWQZSC78sAHL5Y0saxqxu8wQIMoYrd//l7D3flp9//fdK2EjgDc8OFhdtSZAMDuECgHubgh3npLmtBVQ9GWyn4genxyjKc+5wg2ui9N1ZfulLx3ZWZ2YeCMo9NTpwL8mLOpDEagFhtk97jhjixTPfnm/WhcFb418SEt5xWWfNXLMHZisLUopyqbUz17wtR0bWEXAq+rYrlyMGioso1ibQYIun5EplKKNGB5NfZGhssiumUlbrffZx0bi5ObPjtmYqBbtdujqYFYSTY3/RfUxFNL8TVikOv8NoP9gdTUuH0NiIDESbPGiXipwPXYIHisALVe1TzxHwkB9ASNEgUCuj6iydjRY9PSPCWBE35xf2l6pc5IoLadQhbntXd9lQ1ZXRPyJbOh+ODd0Ja5s1OI=
 
 script:
   - "./gradlew clean build jacocoTestReport sonarqube"
@@ -36,3 +36,4 @@ cache:
 
 before_deploy:
   - openssl aes-256-cbc -K $encrypted_12c8071d2874_key -iv $encrypted_12c8071d2874_iv -in private_key.gpg.enc -out ./private_key.gpg -d
+  - openssl aes-256-cbc -K $encrypted_12c8071d2874_key -iv $encrypted_12c8071d2874_iv -in gradle.properties.enc -out ./gradle.properties -d
