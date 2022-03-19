@@ -18,4 +18,3 @@ buildNumber.properties
 gradle.properties
 build/**
 private_key.gpg
-
