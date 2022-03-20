@@ -2,17 +2,20 @@ package com.kirekov.sneaky;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@SuppressWarnings("PMD.UnusedPrivateMethod")
 class SneakyTest {
 
   @ParameterizedTest
@@ -81,7 +84,6 @@ class SneakyTest {
     );
   }
 
-  @SuppressWarnings("PMD.UnusedPrivateMethod")
   private static Stream<Arguments> biConsumerLongs() {
     return Stream.of(
         arguments(1L, 5L),
@@ -89,5 +91,39 @@ class SneakyTest {
         arguments(753L, -48345L),
         arguments(64L, 31L)
     );
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {1, 2, 3, 4, 5})
+  void shouldThrowExceptionForPredicate(int value) {
+    Predicate<Integer> predicate = Sneaky.predicate(v -> {
+      if (v.equals(value)) {
+        throw new Exception();
+      }
+      return true;
+    });
+
+    assertThrows(
+        Exception.class,
+        () -> predicate.test(value),
+        "Should throw exception"
+    );
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {1, 2, 3, 4, 5})
+  void shouldSucceedForPredicate(int value) {
+    Predicate<Integer> predicate = Sneaky.predicate(v -> {
+      if (!v.equals(value)) {
+        throw new Exception();
+      }
+      return true;
+    });
+
+    boolean result = assertDoesNotThrow(
+        () -> predicate.test(value),
+        "Should succeed"
+    );
+    assertTrue(result, "Unexpected predicate result");
   }
 }

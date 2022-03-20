@@ -2,8 +2,10 @@ package com.kirekov.sneaky;
 
 import com.kirekov.sneaky.lambda.CheckedBiConsumer;
 import com.kirekov.sneaky.lambda.CheckedConsumer;
+import com.kirekov.sneaky.lambda.CheckedPredicate;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Factory for sneaky wrappers.
@@ -17,7 +19,7 @@ public final class Sneaky {
 
   /**
    * Returns {@linkplain Consumer} that may throw {@linkplain Exception} ignoring {@code throws
-   * Exception} in the method signature.
+   * Exception} clause in the method signature.
    *
    * @param checkedConsumer consumer that throws {@linkplain Exception}
    * @param <T>             the input argument
@@ -35,7 +37,7 @@ public final class Sneaky {
 
   /**
    * Returns {@linkplain BiConsumer} that may throw {@linkplain Exception} ignoring {@code throws
-   * Exception} in the method signature.
+   * Exception} clause in the method signature.
    *
    * @param checkedBiConsumer biConsumer that throws {@linkplain Exception}
    * @param <T>               the first input argument
@@ -48,6 +50,25 @@ public final class Sneaky {
         checkedBiConsumer.accept(t, u);
       } catch (Exception e) {
         throwUnchecked(e);
+      }
+    };
+  }
+
+  /**
+   * Returns {@linkplain Predicate} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedPredicate predicate that throws {@linkplain Exception}
+   * @param <T>              the input argument
+   * @return wrapped predicate
+   */
+  public static <T> Predicate<T> predicate(CheckedPredicate<T> checkedPredicate) {
+    return t -> {
+      try {
+        return checkedPredicate.test(t);
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return false;
       }
     };
   }
