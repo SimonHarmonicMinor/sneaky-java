@@ -1,9 +1,11 @@
 package com.kirekov.sneaky;
 
 import com.kirekov.sneaky.lambda.CheckedBiConsumer;
+import com.kirekov.sneaky.lambda.CheckedBiPredicate;
 import com.kirekov.sneaky.lambda.CheckedConsumer;
 import com.kirekov.sneaky.lambda.CheckedPredicate;
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -15,7 +17,6 @@ public final class Sneaky {
   private Sneaky() {
     // no op
   }
-
 
   /**
    * Returns {@linkplain Consumer} that may throw {@linkplain Exception} ignoring {@code throws
@@ -66,6 +67,26 @@ public final class Sneaky {
     return t -> {
       try {
         return checkedPredicate.test(t);
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return false;
+      }
+    };
+  }
+
+  /**
+   * Returns {@linkplain BiPredicate} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedBiPredicate biPredicate that throws {@linkplain Exception}
+   * @param <T>                the first input argument
+   * @param <U>                the second input argument
+   * @return wrapped biPredicate
+   */
+  public static <T, U> BiPredicate<T, U> biPredicate(CheckedBiPredicate<T, U> checkedBiPredicate) {
+    return (t, u) -> {
+      try {
+        return checkedBiPredicate.test(t, u);
       } catch (Exception e) {
         throwUnchecked(e);
         return false;
