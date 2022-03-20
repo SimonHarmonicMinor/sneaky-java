@@ -1,6 +1,7 @@
 package com.kirekov.sneaky;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,7 +12,9 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -162,6 +165,28 @@ class SneakyTest {
     );
     assertFalse(result, "Unexpected biPredicate result");
   }
+
+  @Test
+  void shouldThrowExceptionForSupplier() {
+    Supplier<String> supplier = Sneaky.supplier(() -> {
+      throw new Exception();
+    });
+
+    assertThrows(
+        Exception.class,
+        supplier::get,
+        "Should throw exception"
+    );
+  }
+
+  @Test
+  void shouldSucceedForSupplier() {
+    Supplier<String> supplier = Sneaky.supplier(() -> "some_string");
+
+    String result = assertDoesNotThrow(supplier::get, "Should not throw exception");
+    assertEquals("some_string", result, "Unexpected supplier result");
+  }
+
 
   private static Stream<Arguments> biPredicateIntegers() {
     return Stream.of(

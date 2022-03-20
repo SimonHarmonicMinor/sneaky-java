@@ -4,10 +4,12 @@ import com.kirekov.sneaky.lambda.CheckedBiConsumer;
 import com.kirekov.sneaky.lambda.CheckedBiPredicate;
 import com.kirekov.sneaky.lambda.CheckedConsumer;
 import com.kirekov.sneaky.lambda.CheckedPredicate;
+import com.kirekov.sneaky.lambda.CheckedSupplier;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Factory for sneaky wrappers.
@@ -90,6 +92,17 @@ public final class Sneaky {
       } catch (Exception e) {
         throwUnchecked(e);
         return false;
+      }
+    };
+  }
+
+  public static <T> Supplier<T> supplier(CheckedSupplier<T> checkedSupplier) {
+    return () -> {
+      try {
+        return checkedSupplier.get();
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return null;
       }
     };
   }
