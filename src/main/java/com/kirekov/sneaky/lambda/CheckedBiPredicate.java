@@ -1,23 +1,21 @@
 package com.kirekov.sneaky.lambda;
 
-import java.util.function.BiConsumer;
-
 /**
- * BiConsumer that may throw {@linkplain Exception}.
+ * BiPredicate that may throw {@linkplain Exception}.
  *
  * @param <T> the first input argument
  * @param <U> the second input argument
- * @see BiConsumer
  */
 @FunctionalInterface
-public interface CheckedBiConsumer<T, U> {
+public interface CheckedBiPredicate<T, U> {
 
   /**
-   * Performs the operation on the given arguments.
+   * Evaluates this predicate on the given arguments.
    *
    * @param t the first input argument
    * @param u the second input argument
+   * @return true if the input arguments match the predicate, otherwise false
    * @throws Exception if any error occurs
    */
-  void accept(T t, U u) throws Exception;
+  boolean test(T t, U u) throws Exception;
 }
