@@ -1,10 +1,12 @@
 package com.kirekov.sneaky.lambda;
 
+import java.util.function.Predicate;
+
 /**
  * Predicate that may throw {@linkplain Exception}.
  *
  * @param <T> the input parameter
- * @see CheckedPredicate
+ * @see Predicate
  */
 @FunctionalInterface
 public interface CheckedPredicate<T> {

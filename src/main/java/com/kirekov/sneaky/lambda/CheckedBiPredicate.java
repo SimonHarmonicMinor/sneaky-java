@@ -1,10 +1,13 @@
 package com.kirekov.sneaky.lambda;
 
+import java.util.function.BiPredicate;
+
 /**
  * BiPredicate that may throw {@linkplain Exception}.
  *
  * @param <T> the first input argument
  * @param <U> the second input argument
+ * @see BiPredicate
  */
 @FunctionalInterface
 public interface CheckedBiPredicate<T, U> {
