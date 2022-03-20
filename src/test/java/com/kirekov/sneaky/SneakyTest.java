@@ -9,6 +9,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -236,6 +237,53 @@ class SneakyTest {
         arguments(1, 2),
         arguments(4, -123),
         arguments(81, 4124)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("biFunctionIntegers")
+  void shouldThrowExceptionForBiFunction(int arg1, int arg2, int result) {
+    BiFunction<Integer, Integer, Integer> biFunction = Sneaky.biFunction(
+        (t, u) -> {
+          if (t.equals(arg1) && u.equals(arg2)) {
+            throw new Exception();
+          }
+          return result;
+        }
+    );
+
+    assertThrows(
+        Exception.class,
+        () -> biFunction.apply(arg1, arg2),
+        "Should throw exception"
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("biFunctionIntegers")
+  void shouldSucceedForBiFunction(int arg1, int arg2, int result) {
+    BiFunction<Integer, Integer, Integer> biFunction = Sneaky.biFunction(
+        (t, u) -> {
+          if (!t.equals(arg1) || !u.equals(arg2)) {
+            throw new Exception();
+          }
+          return result;
+        }
+    );
+
+    int res = assertDoesNotThrow(
+        () -> biFunction.apply(arg1, arg2),
+        "Should not throw exception"
+    );
+
+    assertEquals(result, res, "Unexpected function result");
+  }
+
+  private static Stream<Arguments> biFunctionIntegers() {
+    return Stream.of(
+        arguments(1, 2, 3),
+        arguments(-51, 982, 0),
+        arguments(987, 713, -16851)
     );
   }
 }
