@@ -18,6 +18,7 @@ branches:
   only:
     - master
     - main
+    - releases
 
 deploy:
   - provider: script
@@ -25,7 +26,7 @@ deploy:
     script: bash ./deploy.sh
     on:
       all_branches: true
-      condition: "$TRAVIS_BRANCH =~ ^(master|main)$"
+      condition: "$TRAVIS_BRANCH =~ ^(master|main|releases)$"
 
 cache:
   directories:

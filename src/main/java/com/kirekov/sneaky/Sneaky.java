@@ -1,9 +1,19 @@
 package com.kirekov.sneaky;
 
 import com.kirekov.sneaky.lambda.CheckedBiConsumer;
+import com.kirekov.sneaky.lambda.CheckedBiFunction;
+import com.kirekov.sneaky.lambda.CheckedBiPredicate;
 import com.kirekov.sneaky.lambda.CheckedConsumer;
+import com.kirekov.sneaky.lambda.CheckedFunction;
+import com.kirekov.sneaky.lambda.CheckedPredicate;
+import com.kirekov.sneaky.lambda.CheckedSupplier;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Factory for sneaky wrappers.
@@ -14,10 +24,9 @@ public final class Sneaky {
     // no op
   }
 
-
   /**
    * Returns {@linkplain Consumer} that may throw {@linkplain Exception} ignoring {@code throws
-   * Exception} in the method signature.
+   * Exception} clause in the method signature.
    *
    * @param checkedConsumer consumer that throws {@linkplain Exception}
    * @param <T>             the input argument
@@ -35,7 +44,7 @@ public final class Sneaky {
 
   /**
    * Returns {@linkplain BiConsumer} that may throw {@linkplain Exception} ignoring {@code throws
-   * Exception} in the method signature.
+   * Exception} clause in the method signature.
    *
    * @param checkedBiConsumer biConsumer that throws {@linkplain Exception}
    * @param <T>               the first input argument
@@ -48,6 +57,107 @@ public final class Sneaky {
         checkedBiConsumer.accept(t, u);
       } catch (Exception e) {
         throwUnchecked(e);
+      }
+    };
+  }
+
+  /**
+   * Returns {@linkplain Predicate} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedPredicate predicate that throws {@linkplain Exception}
+   * @param <T>              the input argument
+   * @return wrapped predicate
+   */
+  public static <T> Predicate<T> predicate(CheckedPredicate<T> checkedPredicate) {
+    return t -> {
+      try {
+        return checkedPredicate.test(t);
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return false;
+      }
+    };
+  }
+
+  /**
+   * Returns {@linkplain BiPredicate} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedBiPredicate biPredicate that throws {@linkplain Exception}
+   * @param <T>                the first input argument
+   * @param <U>                the second input argument
+   * @return wrapped biPredicate
+   */
+  public static <T, U> BiPredicate<T, U> biPredicate(CheckedBiPredicate<T, U> checkedBiPredicate) {
+    return (t, u) -> {
+      try {
+        return checkedBiPredicate.test(t, u);
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return false;
+      }
+    };
+  }
+
+  /**
+   * Returns {@linkplain Supplier} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedSupplier supplier that throws {@linkplain Exception}
+   * @param <T>             the result of supplier execution
+   * @return wrapped supplier
+   */
+  public static <T> Supplier<T> supplier(CheckedSupplier<T> checkedSupplier) {
+    return () -> {
+      try {
+        return checkedSupplier.get();
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return null;
+      }
+    };
+  }
+
+  /**
+   * Returns {@linkplain Function} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedFunction function that throws {@linkplain Exception}
+   * @param <T>             the function argument
+   * @param <R>             the function result
+   * @return wrapped function
+   */
+  public static <T, R> Function<T, R> function(CheckedFunction<T, R> checkedFunction) {
+    return t -> {
+      try {
+        return checkedFunction.apply(t);
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return null;
+      }
+    };
+  }
+
+  /**
+   * Returns {@linkplain BiFunction} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedBiFunction biFunction that throws {@linkplain Exception}
+   * @param <T>               the first function argument
+   * @param <U>               the second function argument
+   * @param <R>               the function result
+   * @return wrapped function
+   */
+  public static <T, U, R> BiFunction<T, U, R> biFunction(
+      CheckedBiFunction<T, U, R> checkedBiFunction
+  ) {
+    return (t, u) -> {
+      try {
+        return checkedBiFunction.apply(t, u);
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return null;
       }
     };
   }
