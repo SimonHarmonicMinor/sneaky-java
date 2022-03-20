@@ -161,5 +161,7 @@ sonarqube {
     properties {
         property "sonar.projectKey", "SimonHarmonicMinor_sneaky-java"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.organization", "simonharmonicminor"
+        property "sonar.host.url", "https://sonarcloud.io"
     }
 }
