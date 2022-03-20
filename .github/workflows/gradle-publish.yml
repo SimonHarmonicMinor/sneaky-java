@@ -34,8 +34,9 @@ jobs:
       - name: Prepare to publish
         run: |
           echo "${{ secrets.GPG_KEY_CONTENTS }}" | base64 --decode > private_key.gpg
+          cat ./private_key.gpg | sha256sum
       - name: Publish with Gradle
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: current
-          arguments: build publishToSonatype closeAndReleaseSonatypeStagingRepository -Psigning.secretKeyRingFile=private_key.gpg -Psigning.keyId=${{secrets.SIGNING_KEYID}} -Psigning.password=${{secrets.SIGNING_PASSWORD}} -PossSonatypeUsername=${{secrets.OSS_SONATYPE_USERNAME}} -PossSonatypePassword=${{secrets.OSS_SONATYPE_PASSWORD}}
+          arguments: build publishToSonatype closeAndReleaseSonatypeStagingRepository -Psigning.secretKeyRingFile=private_key.gpg -Psigning.keyId=${{secrets.SIGNING_KEYID}} -Psigning.password="${{secrets.SIGNING_PASSWORD}}" -PossSonatypeUsername=${{secrets.OSS_SONATYPE_USERNAME}} -PossSonatypePassword=${{secrets.OSS_SONATYPE_PASSWORD}}
