@@ -3,11 +3,13 @@ package com.kirekov.sneaky;
 import com.kirekov.sneaky.lambda.CheckedBiConsumer;
 import com.kirekov.sneaky.lambda.CheckedBiPredicate;
 import com.kirekov.sneaky.lambda.CheckedConsumer;
+import com.kirekov.sneaky.lambda.CheckedFunction;
 import com.kirekov.sneaky.lambda.CheckedPredicate;
 import com.kirekov.sneaky.lambda.CheckedSupplier;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -108,6 +110,26 @@ public final class Sneaky {
     return () -> {
       try {
         return checkedSupplier.get();
+      } catch (Exception e) {
+        throwUnchecked(e);
+        return null;
+      }
+    };
+  }
+
+  /**
+   * Returns {@linkplain Function} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedFunction function that throws {@linkplain Exception}
+   * @param <T>             the function argument
+   * @param <R>             the function result
+   * @return wrapped function
+   */
+  public static <T, R> Function<T, R> function(CheckedFunction<T, R> checkedFunction) {
+    return t -> {
+      try {
+        return checkedFunction.apply(t);
       } catch (Exception e) {
         throwUnchecked(e);
         return null;

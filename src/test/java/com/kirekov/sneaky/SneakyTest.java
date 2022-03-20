@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -166,6 +167,15 @@ class SneakyTest {
     assertFalse(result, "Unexpected biPredicate result");
   }
 
+  private static Stream<Arguments> biPredicateIntegers() {
+    return Stream.of(
+        arguments(12, 41),
+        arguments(-41, 9712),
+        arguments(5641, 752),
+        arguments(-5131, 8254)
+    );
+  }
+
   @Test
   void shouldThrowExceptionForSupplier() {
     Supplier<String> supplier = Sneaky.supplier(() -> {
@@ -187,13 +197,45 @@ class SneakyTest {
     assertEquals("some_string", result, "Unexpected supplier result");
   }
 
+  @ParameterizedTest
+  @MethodSource("functionIntegers")
+  void shouldThrowExceptionForFunction(int argument, int result) {
+    Function<Integer, Integer> function = Sneaky.function(t -> {
+      if (t.equals(argument)) {
+        throw new Exception();
+      }
+      return result;
+    });
 
-  private static Stream<Arguments> biPredicateIntegers() {
+    assertThrows(
+        Exception.class,
+        () -> function.apply(argument),
+        "Should throw exception"
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("functionIntegers")
+  void shouldSucceedForFunction(int argument, int result) {
+    Function<Integer, Integer> function = Sneaky.function(t -> {
+      if (!t.equals(argument)) {
+        throw new Exception();
+      }
+      return result;
+    });
+
+    int res = assertDoesNotThrow(
+        () -> function.apply(argument),
+        "Should not throw exception"
+    );
+    assertEquals(result, res, "Unexpected function result");
+  }
+
+  private static Stream<Arguments> functionIntegers() {
     return Stream.of(
-        arguments(12, 41),
-        arguments(-41, 9712),
-        arguments(5641, 752),
-        arguments(-5131, 8254)
+        arguments(1, 2),
+        arguments(4, -123),
+        arguments(81, 4124)
     );
   }
 }
