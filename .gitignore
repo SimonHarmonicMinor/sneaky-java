@@ -15,7 +15,6 @@ buildNumber.properties
 .idea/workspace.xml
 /java-useful-utils.iml
 .gradle/**
-gradle.properties
 build/**
 private_key.gpg
 
