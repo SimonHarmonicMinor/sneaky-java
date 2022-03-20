@@ -9,6 +9,7 @@ import java.util.function.BiConsumer;
  * @param <U> the second input argument
  * @see BiConsumer
  */
+@FunctionalInterface
 public interface CheckedBiConsumer<T, U> {
 
   /**

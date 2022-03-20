@@ -6,6 +6,7 @@ package com.kirekov.sneaky.lambda;
  * @param <T> the input parameter
  * @see CheckedPredicate
  */
+@FunctionalInterface
 public interface CheckedPredicate<T> {
 
   /**
