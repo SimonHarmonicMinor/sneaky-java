@@ -96,6 +96,14 @@ public final class Sneaky {
     };
   }
 
+  /**
+   * Returns {@linkplain Supplier} that may throw {@linkplain Exception} ignoring {@code throws
+   * Exception} clause in the method signature.
+   *
+   * @param checkedSupplier supplier that throws {@linkplain Exception}
+   * @param <T>             the result of supplier execution
+   * @return wrapped supplier
+   */
   public static <T> Supplier<T> supplier(CheckedSupplier<T> checkedSupplier) {
     return () -> {
       try {
